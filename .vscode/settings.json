@@ -1,0 +1,7 @@
+{
+    "editor.inlineSuggest.showToolbar": "always",
+    "python.analysis.extraPaths": [
+        "./app",
+        "./app"
+    ]
+}
