@@ -15,17 +15,20 @@ router = APIRouter(
 
 @router.post("/new", status_code=status.HTTP_201_CREATED, response_model=schemas.HotspotOut)
 def register(hotspot: schemas.HotspotCreate, db: Session = Depends(get_db)):
+    # Create a list of tuples from the coordinates
+    coordinates = [(coord[0], coord[1]) for coord in hotspot.coordinates]
+
     new_spot = models.Hotspot(
-        name= hotspot.name,
-        coordinates=[coord for coords in hotspot.coordinates for coord in coords],
-        status = hotspot.status
-        
+        name=hotspot.name,
+        coordinates=coordinates,
+        status=hotspot.status
     )
     db.add(new_spot)
     db.commit()
     db.refresh(new_spot)
     
     return new_spot
+
 
 
 @router.post("/start_swiping")
