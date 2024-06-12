@@ -32,7 +32,7 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index('idx_hotspots_location', 'hotspots', ['location'], unique=False, postgresql_using='gist')
+    
     op.create_index(op.f('ix_hotspots_id'), 'hotspots', ['id'], unique=False)
     op.create_index(op.f('ix_hotspots_name'), 'hotspots', ['name'], unique=False)
     op.create_table('user_hotspots',
@@ -55,6 +55,6 @@ def downgrade() -> None:
     op.drop_table('user_hotspots')
     op.drop_index(op.f('ix_hotspots_name'), table_name='hotspots')
     op.drop_index(op.f('ix_hotspots_id'), table_name='hotspots')
-    op.drop_index('idx_hotspots_location', table_name='hotspots', postgresql_using='gist')
+    
     op.drop_table('hotspots')
     # ### end Alembic commands ###
