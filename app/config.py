@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     google_client_id: str
     google_client_secret: str
     redirect_uri: str
+    mail_pass : str
 
 
 
@@ -24,4 +25,4 @@ class Settings(BaseSettings):
         env_file = Path("/home/lex/hogspot-backend/.env")
 
 
-settings = Settings(_env_file=Path("/home/lex/hogspot-backend/.env"), _env_file_encoding="utf-8")
+settings = Settings(_env_file=Path("/home/ubuntu/Hogspot.life/.env"), _env_file_encoding="utf-8")
