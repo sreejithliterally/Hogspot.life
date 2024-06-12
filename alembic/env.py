@@ -1,16 +1,35 @@
 from logging.config import fileConfig
 import os
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 from app import models
 from alembic import context
 from dotenv import load_dotenv
 from pathlib import Path
 
-
-
-env_path = Path('..') / '.env'  # Adjust the path according to your project structure
+# Adjust the path according to your project structure
+env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
+
+# Verify if the environment variables are loaded
+database_username = os.getenv("database_username")
+database_password = os.getenv("database_password")
+database_hostname = os.getenv("database_hostname")
+database_port = os.getenv("database_port")
+database_name = os.getenv("database_name")
+
+# Print the values to debug
+print(f"database_username: {database_username}")
+print(f"database_password: {database_password}")
+print(f"database_hostname: {database_hostname}")
+print(f"database_port: {database_port}")
+print(f"database_name: {database_name}")
+
+# Construct the database URL
+SQLALCHEMY_DATABASE_URL = (
+    f"postgresql://{database_username}:{database_password}@{database_hostname}:{database_port}/{database_name}"
+)
+print(f"Constructed DATABASE_URL: {SQLALCHEMY_DATABASE_URL}")
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -20,30 +39,16 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
+# Add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = models.Base.metadata
 
-
-
 # Set SQLAlchemy URL from environment variables
-database_username = os.getenv("database_username")
-database_password = os.getenv("database_password")
-database_hostname = os.getenv("database_hostname")
-database_port = os.getenv("database_port")
-database_name = os.getenv("database_name")
-
-SQLALCHEMY_DATABASE_URL = (
-    f"postgresql://{database_username}:{database_password}@{database_hostname}:{database_port}/{database_name}"
-)
-
-
-
 config.set_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URL)
 
-# other values from the config, defined by the needs of env.py,
+# Other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
@@ -57,7 +62,6 @@ def run_migrations_offline() -> None:
 
     Calls to context.execute() here emit the given string to the
     script output.
-
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
@@ -76,7 +80,6 @@ def run_migrations_online() -> None:
 
     In this scenario we need to create an Engine
     and associate a connection with the context.
-
     """
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
