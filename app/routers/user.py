@@ -1,4 +1,4 @@
-from fastapi import status, HTTPException,Depends, APIRouter,UploadFile, File
+from fastapi import status, HTTPException,Depends, APIRouter,UploadFile, File, Form
 from typing import List
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -69,30 +69,46 @@ def upload_image_to_s3(image, bucket_name):
         return image_url
     except NoCredentialsError:
         return None
-    
-@router.post("/upload_image", response_model=schemas.UserImageOut)
-def upload_image(
-    file: UploadFile = File(...),
-    priority: int = 0,  # Accept priority as a parameter
-    current_user: models.User = Depends(get_current_user),
+def parse_priorities(priorities_str: str) -> List[int]:
+    try:
+        return list(map(int, priorities_str.split(',')))
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Priorities must be a comma-separated list of integers")
+
+@router.post("/upload_images", response_model=List[schemas.UserImageOut])
+def upload_images(
+    files: List[UploadFile] = File(...),
+    priorities: str = Form(...),  # Accept priorities as a comma-separated string
+    current_user: models.User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
     user = db.query(models.User).filter(models.User.id == current_user.id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    file_url = upload_image_to_s3(file, user.id, 'travelactivity')
+    # Parse priorities
+    priorities_list = parse_priorities(priorities)
+    
+    if len(files) != len(priorities_list):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The number of files and priorities must match")
+    
+    uploaded_images = []
 
-    user_image = models.UserImage(
-        user_id=user.id,
-        image_url=file_url,
-        priority=priority  # Set priority
-    )
-    db.add(user_image)
-    db.commit()
-    db.refresh(user_image)
+    for i, file in enumerate(files):
+        file_url = upload_image_to_s3(file, 'travelactivity')
 
-    return user_image
+        user_image = models.UserImage(
+            user_id=user.id,
+            image_url=file_url,
+            priority=priorities_list[i]
+        )
+        db.add(user_image)
+        db.commit()
+        db.refresh(user_image)
+        uploaded_images.append(user_image)
+
+    return uploaded_images
+
 
 @router.put("/update_image_priority/{image_id}", response_model=schemas.UserImageOut)
 def update_image_priority(
@@ -115,4 +131,3 @@ def update_image_priority(
 def get_profile_images(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     images = db.query(models.UserImage).filter(models.UserImage.user_id == current_user.id).order_by(models.UserImage.priority).all()
     return images
-
