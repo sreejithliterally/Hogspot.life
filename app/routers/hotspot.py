@@ -31,6 +31,7 @@ def register(hotspot: schemas.HotspotCreate, db: Session = Depends(get_db)):
 
 
 
+
 @router.post("/start_swiping")
 def start_swiping(location: schemas.Location, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == current_user.id).first()
@@ -80,7 +81,7 @@ def start_swiping(location: schemas.Location, current_user: models.User = Depend
         response_data = {
             "status": "success",
             "message": "User is within an active hotspot",
-            "hotspots": [{"id": hotspot.id, "name": hotspot.name} for hotspot in user_in_hotspots],
+            "hotspots": [{"id": hotspot.id, "name": hotspot.name, "description": hotspot.description} for hotspot in user_in_hotspots],
             "other_users": [{"id": u.id, "name": u.name, "bio": u.bio} for u in hotspot_users]
         }
 

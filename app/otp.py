@@ -13,7 +13,7 @@ def send_otp(email: str, otp: int):
 
     with smtplib.SMTP('smtp.gmail.com', 587) as server:
         server.starttls()
-        server.login('thegluping@gmail.com', settings.mail_pass)
+        server.login('thegluping@gmail.com', 'dvdvdbpxozhllmka')
         server.sendmail('thegluping@gmail.com', email, msg.as_string())
 
 def generate_otp():

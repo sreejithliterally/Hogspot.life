@@ -23,9 +23,28 @@ class UserOut(BaseModel):
 
     class Config:
         orm_mode = True
+
+class UserImageCreate(BaseModel):
+    image_url: str
+    priority: Optional[int] = 0
+
+class UserImageOut(BaseModel):
+    id: int
+    image_url: str
+    priority: int
+
+    class Config:
+        orm_mode = True
+
 class UserLogin(BaseModel):
     email : EmailStr
     password : str
+
+class CompleteProfile(BaseModel):
+    bio: Optional[str] = None
+    gender: Optional[str] = None
+
+
 
 
 
@@ -41,12 +60,14 @@ class TokenData(BaseModel):
 
 class HotspotCreate(BaseModel):
     name: str
+    description:str
     coordinates: List[Tuple[float, float]]
     status: bool 
 
 class HotspotOut(BaseModel):
     id: int
     name: str
+    description:str
     coordinates: List[Tuple[float, float]]
     status: bool 
 

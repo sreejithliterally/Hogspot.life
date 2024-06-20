@@ -10,14 +10,14 @@ class Settings(BaseSettings):
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int
-    # AWS_SERVER_PUBLIC_KEY: str
-    # AWS_SERVER_SECRET_KEY: str
-    # RAZORPAY_KEY_ID: str
-    # RAZORPAY_KEY_SECRET: str
+    AWS_SERVER_PUBLIC_KEY: str
+    AWS_SERVER_SECRET_KEY: str
+    RAZORPAY_KEY_ID: str
+    RAZORPAY_KEY_SECRET: str
     google_client_id: str
     google_client_secret: str
     redirect_uri: str
-    mail_pass : str
+
 
 
 
@@ -25,4 +25,4 @@ class Settings(BaseSettings):
         env_file = Path("/home/lex/hogspot-backend/.env")
 
 
-settings = Settings(_env_file=Path("/home/ubuntu/Hogspot.life/.env"), _env_file_encoding="utf-8")
+settings = Settings(_env_file=Path("/home/lex/hogspot-backend/.env"), _env_file_encoding="utf-8")
