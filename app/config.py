@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     google_client_id: str
     google_client_secret: str
     redirect_uri: str
-    mail_pass: str
+    # mail_pass: str
 
 
 
