@@ -74,3 +74,11 @@ class HotspotOut(BaseModel):
 class Location(BaseModel):
     latitude: float
     longitude: float
+
+
+class Swipe(BaseModel):
+    swiped_user_id: int
+    swipe_type: str  # 'right' or 'left'
+
+    class Config:
+        orm_mode = True
