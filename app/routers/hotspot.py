@@ -20,6 +20,7 @@ def register(hotspot: schemas.HotspotCreate, db: Session = Depends(get_db)):
 
     new_spot = models.Hotspot(
         name=hotspot.name,
+        description=hotspot.description,
         coordinates=coordinates,
         status=hotspot.status
     )
