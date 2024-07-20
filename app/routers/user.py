@@ -9,6 +9,7 @@ from oauth2 import get_current_user
 import boto3
 from botocore.exceptions import NoCredentialsError
 from config import settings
+import logging
 
 AWS_SERVER_PUBLIC_KEY = settings.AWS_SERVER_PUBLIC_KEY
 AWS_SERVER_SECRET_KEY = settings.AWS_SERVER_SECRET_KEY
@@ -62,13 +63,18 @@ def complete_profile(
     return user
 
 def upload_image_to_s3(image, bucket_name):
-    s3 = boto3.client('s3')
+    s3 = boto3.client('s3', aws_access_key_id=AWS_SERVER_PUBLIC_KEY, aws_secret_access_key=AWS_SERVER_SECRET_KEY)
     try:
         s3.upload_fileobj(image.file, bucket_name, image.filename)
         image_url = f"https://{bucket_name}.s3.amazonaws.com/{image.filename}"
         return image_url
     except NoCredentialsError:
-        return None
+        logging.error("Credentials not available")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="S3 credentials not available")
+    except Exception as e:
+        logging.error(f"Error uploading image: {str(e)}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error uploading image")
+
 def parse_priorities(priorities_str: str) -> List[int]:
     try:
         return list(map(int, priorities_str.split(',')))
