@@ -47,5 +47,6 @@ def swipe(swipe_data:schemas.Swipe, current_user:models.User = Depends(get_curre
             )
             db.add(match)
             db.commit()
+            return {"its a match"}
     
     return {"detail": "Swipe recorded successfully"}
