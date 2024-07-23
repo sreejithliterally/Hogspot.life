@@ -26,6 +26,9 @@ class User(Base):
     hotspots = relationship("UserHotspot", back_populates="user")
     swipes_sent = relationship("Swipe", foreign_keys='Swipe.user_id', back_populates="sender")
     swipes_received = relationship("Swipe", foreign_keys='Swipe.swiped_user_id', back_populates="receiver")
+    matches_as_user1 = relationship("Match", foreign_keys='Match.user1_id', back_populates="user1")
+    matches_as_user2 = relationship("Match", foreign_keys='Match.user2_id', back_populates="user2")
+
 
 
 class UserImage(Base):
@@ -102,7 +105,4 @@ class Match(Base):
 
     __table_args__ = (UniqueConstraint('user1_id', 'user2_id', name='_user1_user2_uc'),)
 
-# Adding relationships for matches in User model
-User.matches_as_user1 = relationship("Match", foreign_keys=[Match.user1_id], back_populates="user1")
-User.matches_as_user2 = relationship("Match", foreign_keys=[Match.user2_id], back_populates="user2")
 
