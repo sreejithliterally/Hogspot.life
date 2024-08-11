@@ -101,7 +101,7 @@ def upload_images(
     uploaded_images = []
 
     for i, file in enumerate(files):
-        file_url = upload_image_to_s3(file, 'travelactivity')
+        file_url = upload_image_to_s3(file, 'hogspot')
 
         user_image = models.UserImage(
             user_id=user.id,
