@@ -1,11 +1,11 @@
 from fastapi import status, HTTPException,Depends,APIRouter
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-import models, schemas, utils
-from database import get_db
+from app import models, schemas, utils
+from app.database import get_db
 from datetime import datetime
 
-from oauth2 import get_current_user
+from app.oauth2 import get_current_user
 
 router = APIRouter(
     prefix="/swipe",

@@ -20,7 +20,6 @@ class Settings(BaseSettings):
 
 
     class Config:
-        env_file = Path("/home/ubuntu/Hogspot.life/.env")
+        env_file = Path("/app/.env")
 
-
-settings = Settings(_env_file=Path("/home/ubuntu/Hogspot.life/.env"), _env_file_encoding="utf-8")
+settings = Settings(_env_file=Path("/app/.env"), _env_file_encoding="utf-8")

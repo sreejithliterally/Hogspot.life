@@ -1,7 +1,7 @@
 from fastapi import status, HTTPException,Depends, APIRouter
 from sqlalchemy.orm import Session
-import models, otp as otp
-from database import get_db
+from app import models, otp as otp
+from app.database import get_db
 from datetime import datetime, timedelta
 
 

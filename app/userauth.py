@@ -2,9 +2,9 @@ from fastapi import APIRouter, Request, Depends
 from authlib.integrations.starlette_client import OAuth
 from sqlalchemy.orm import Session
 from starlette.responses import RedirectResponse
-from config import settings
+from app.config import settings
 from datetime import datetime
-import models, utils, database, oauth2
+from app import models, utils, database, oauth2
 
 router = APIRouter(tags=["Auth"])
 
