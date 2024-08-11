@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-import models, schemas, utils
+from app import models, schemas, utils
 from datetime import datetime
-from database import get_db
-from oauth2 import get_current_user
+from app.database import get_db
+from app.oauth2 import get_current_user
 
 
 from shapely.geometry import Point, Polygon

@@ -2,13 +2,13 @@ from fastapi import status, HTTPException,Depends, APIRouter,UploadFile, File, F
 from typing import List
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-import models, schemas, utils
-from database import get_db
+from app import models, schemas, utils
+from app.database import get_db
 import random
-from oauth2 import get_current_user
+from app.oauth2 import get_current_user
 import boto3
 from botocore.exceptions import NoCredentialsError
-from config import settings
+from app.config import settings
 import logging
 
 AWS_SERVER_PUBLIC_KEY = settings.AWS_SERVER_PUBLIC_KEY

@@ -2,7 +2,7 @@ from email.mime.text import MIMEText
 import smtplib
 import random, string
 import random
-from config import settings
+from app.config import settings
 
 
 def send_otp(email: str, otp: int):

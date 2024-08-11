@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import models
-from database import engine
-from routers import user, userauth,verify_email, hotspot, update_userlocation, swipe,getmatches
+from app import models
+from app.database import engine
+from app.routers import user, userauth,verify_email, hotspot, update_userlocation, swipe,getmatches
 from dotenv import load_dotenv
 
 
