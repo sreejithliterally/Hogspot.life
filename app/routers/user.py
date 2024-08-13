@@ -10,6 +10,9 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 from app.config import settings
 import logging
+from sqlalchemy import func
+import uuid
+
 
 AWS_SERVER_PUBLIC_KEY = settings.AWS_SERVER_PUBLIC_KEY
 AWS_SERVER_SECRET_KEY = settings.AWS_SERVER_SECRET_KEY
@@ -65,8 +68,9 @@ def complete_profile(
 def upload_image_to_s3(image, bucket_name):
     s3 = boto3.client('s3', aws_access_key_id=AWS_SERVER_PUBLIC_KEY, aws_secret_access_key=AWS_SERVER_SECRET_KEY)
     try:
-        s3.upload_fileobj(image.file, bucket_name, image.filename)
-        image_url = f"https://{bucket_name}.s3.amazonaws.com/{image.filename}"
+        unique_filename = f"{uuid.uuid4().hex}_{image.filename}"
+        s3.upload_fileobj(image.file, bucket_name, unique_filename)
+        image_url = f"https://{bucket_name}.s3.amazonaws.com/{unique_filename}"
         return image_url
     except NoCredentialsError:
         logging.error("Credentials not available")
@@ -84,7 +88,6 @@ def parse_priorities(priorities_str: str) -> List[int]:
 @router.post("/upload_images", response_model=List[schemas.UserImageOut])
 def upload_images(
     files: List[UploadFile] = File(...),
-    priorities: str = Form(...),  # Accept priorities as a comma-separated string
     current_user: models.User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
@@ -92,21 +95,16 @@ def upload_images(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # Parse priorities
-    priorities_list = parse_priorities(priorities)
-    
-    if len(files) != len(priorities_list):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The number of files and priorities must match")
     
     uploaded_images = []
-
+    max_priority = db.query(func.max(models.UserImage.priority)).filter(models.UserImage.user_id == current_user.id).scalar() or 0
     for i, file in enumerate(files):
         file_url = upload_image_to_s3(file, 'hogspot')
 
         user_image = models.UserImage(
             user_id=user.id,
             image_url=file_url,
-            priority=priorities_list[i]
+            priority=max_priority+1+i
         )
         db.add(user_image)
         db.commit()
