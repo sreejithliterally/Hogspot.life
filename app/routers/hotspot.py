@@ -82,8 +82,22 @@ def start_swiping(location: schemas.Location, current_user: models.User = Depend
         response_data = {
             "status": "success",
             "message": "User is within an active hotspot",
-            "hotspots": [{"id": hotspot.id, "name": hotspot.name, "description": hotspot.description} for hotspot in user_in_hotspots],
-            "other_users": [{"id": u.id, "name": u.name, "bio": u.bio} for u in hotspot_users]
+            "hotspots": [
+                {"id": hotspot.id, "name": hotspot.name, "description": hotspot.description} 
+                for hotspot in user_in_hotspots
+            ],
+            "other_users": [
+                {
+                    "id": u.id,
+                    "name": u.name,
+                    "bio": u.bio,
+                    "images": [
+                        {"image_url": img.image_url, "priority": img.priority}
+                        for img in u.images
+                    ]
+                }
+                for u in hotspot_users
+            ]
         }
 
         return response_data
