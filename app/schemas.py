@@ -26,7 +26,7 @@ class UserOut(BaseModel):
 
 class UserImageCreate(BaseModel):
     image_url: str
-    priority: Optional[int] = 0
+
 
 class UserImageOut(BaseModel):
     id: int
