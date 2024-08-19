@@ -12,9 +12,9 @@ router = APIRouter(
 
 @router.post("/verify-email", status_code=status.HTTP_200_OK)
 def verify_email(email: str, db: Session = Depends(get_db)):
-    existing_user = db.query(models.User).filter(models.User.email == email).first()
-    if existing_user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+    # existing_user = db.query(models.User).filter(models.User.email == email).first()
+    # if existing_user:
+    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
     
     otp_code = otp.generate_otp()
     expiration_time = datetime.utcnow() + timedelta(minutes=10)  # OTP valid for 10 minutes

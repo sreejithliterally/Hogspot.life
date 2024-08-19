@@ -26,8 +26,8 @@ router = APIRouter(
 @router.post("/register", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(models.User).filter(models.User.email == user.email).first()
-    if existing_user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+    # if existing_user:
+    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
     if user.password != user.confirm_password:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Passwords do not match")
 
@@ -79,11 +79,7 @@ def upload_image_to_s3(image, bucket_name):
         logging.error(f"Error uploading image: {str(e)}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error uploading image")
 
-def parse_priorities(priorities_str: str) -> List[int]:
-    try:
-        return list(map(int, priorities_str.split(',')))
-    except ValueError:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Priorities must be a comma-separated list of integers")
+
 
 @router.post("/upload_images", response_model=List[schemas.UserImageOut])
 def upload_images(
