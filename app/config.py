@@ -23,3 +23,4 @@ class Settings(BaseSettings):
         env_file = Path("/app/.env")
 
 settings = Settings(_env_file=Path("/app/.env"), _env_file_encoding="utf-8")
+print(settings.dict())

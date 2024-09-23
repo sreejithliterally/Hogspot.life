@@ -1,4 +1,4 @@
-version: '3.8'
+version: '2.29.7'
 
 services:
   web:
@@ -8,6 +8,7 @@ services:
     ports:
       - "8000:8000"
     environment:
+      DATABASE_HOSTNAME : ${database_hostname}
       DATABASE_URL: "postgresql://${database_username}:${database_password}@db:5432/${database_name}"
       SECRET_KEY: ${secret_key}
       ALGORITHM: ${algorithm}
