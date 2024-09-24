@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app import models, schemas, utils
 from app.database import get_db
-from datetime import datetime
+from datetime import datetime, date
 import random
 from shapely.geometry import Point, Polygon
 from app.oauth2 import get_current_user
@@ -77,7 +77,7 @@ def start_swiping(location: schemas.Location, current_user: models.User = Depend
             models.UserHotspot.hotspot_id.in_([hotspot.id for hotspot in user_in_hotspots]),
             models.User.id != user.id  # Exclude the current user
         ).all()
-
+        
         # Prepare response data
         response_data = {
             "status": "success",
@@ -91,6 +91,7 @@ def start_swiping(location: schemas.Location, current_user: models.User = Depend
                     "id": u.id,
                     "name": u.name,
                     "bio": u.bio,
+                    "age": calculate_age(u.date_of_birth),
                     "images": [
                         {"image_url": img.image_url, "priority": img.priority}
                         for img in u.images
@@ -106,3 +107,8 @@ def start_swiping(location: schemas.Location, current_user: models.User = Depend
             "status": "failure",
             "message": "User is not within any active hotspots"
         }
+    
+def calculate_age(dob: date) -> int:
+    today = datetime.today().date()  
+    age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    return age
