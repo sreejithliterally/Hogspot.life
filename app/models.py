@@ -1,9 +1,42 @@
-from sqlalchemy import Column, Integer, String, Float, UniqueConstraint,TIMESTAMP, func, Text, ForeignKey, DateTime, Boolean, Date, ARRAY
+from sqlalchemy import Column, Integer, String, Float, UniqueConstraint,TIMESTAMP, func, Text, ForeignKey, DateTime, Boolean, Date, ARRAY, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-
+import enum
 
 Base = declarative_base()
+class EducationLevel(enum.Enum):
+    school = "school"
+    college = "college"
+
+class SmokingHabit(enum.Enum):
+    occasionally = "occasionally"
+    never = "never"
+    socially = "socially"
+
+class DrinkingHabit(enum.Enum):
+    occasionally = "occasionally"
+    never = "never"
+    socially = "socially"
+
+class WorkoutHabit(enum.Enum):
+    daily = "daily"
+    never = "never"
+    sometimes = "sometimes"
+
+class Interest(str, Enum):
+    football = "football"
+    tennis = "tennis"
+    cricket = "cricket"
+    other_sports = "other_sports"
+    books = "books"
+    arts = "arts"
+    rides = "rides"
+    trekking = "trekking"
+    swimming = "swimming"
+    movies = "movies"
+    music = "music"
+    coding = "coding"
+    others = "others"
 
 class User(Base):
     __tablename__ = 'users'
@@ -22,6 +55,16 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
+    education_level = Column(Enum(EducationLevel), nullable=True)
+    college_name = Column(String, nullable=True)
+    profession = Column(String, nullable=True)
+    company = Column(String, nullable=True)
+    height_cm = Column(Float, nullable=True)
+    smoking = Column(Enum(SmokingHabit), nullable=True)
+    drinking = Column(Enum(DrinkingHabit), nullable=True)
+    workout = Column(Enum(WorkoutHabit), nullable=True)
+    interests = Column(ARRAY(Enum(Interest)), nullable=True)
+    
     images = relationship("UserImage", back_populates="user")
     hotspots = relationship("UserHotspot", back_populates="user")
     swipes_sent = relationship("Swipe", foreign_keys='Swipe.user_id', back_populates="sender")
@@ -41,6 +84,10 @@ class UserImage(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="images")
+
+
+
+
 
 
 class OTP(Base):
