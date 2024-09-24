@@ -59,7 +59,24 @@ def complete_profile(
         user.bio = profile_data.bio
     if profile_data.gender is not None:
         user.gender = profile_data.gender
-
+    if profile_data.education_level is not None:
+        user.education_level = profile_data.education_level
+    if profile_data.college_name is not None:
+        user.college_name = profile_data.college_name
+    if profile_data.profession is not None:
+        user.profession = profile_data.profession
+    if profile_data.company is not None:
+        user.company = profile_data.company
+    if profile_data.height_cm is not None:
+        user.height_cm = profile_data.height_cm
+    if profile_data.smoking is not None:
+        user.smoking = profile_data.smoking
+    if profile_data.drinking is not None:
+        user.drinking = profile_data.drinking
+    if profile_data.workout is not None:
+        user.workout = profile_data.workout
+    if profile_data.interests is not None:
+        user.interests = profile_data.interests
     db.commit()
     db.refresh(user)
     
