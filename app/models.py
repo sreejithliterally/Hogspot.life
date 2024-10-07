@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Float, UniqueConstraint,TIMESTAM
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 import enum
+from sqlalchemy import Enum as SQLAEnum
 
 Base = declarative_base()
 class EducationLevel(enum.Enum):
@@ -63,7 +64,11 @@ class User(Base):
     smoking = Column(Enum(SmokingHabit), nullable=True)
     drinking = Column(Enum(DrinkingHabit), nullable=True)
     workout = Column(Enum(WorkoutHabit), nullable=True)
-    interests = Column(ARRAY(Enum(Interest)), nullable=True)
+    # interests = Column(ARRAY(Enum(Interest)), nullable=True)
+
+
+
+
     
     images = relationship("UserImage", back_populates="user")
     hotspots = relationship("UserHotspot", back_populates="user")
@@ -152,4 +157,13 @@ class Match(Base):
 
     __table_args__ = (UniqueConstraint('user1_id', 'user2_id', name='_user1_user2_uc'),)
 
+
+class ChatMessage(Base):
+    __tablename__ = 'chat_messages'
+
+    id = Column(Integer, primary_key=True, index=True)
+    sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)  # References sender
+    receiver_id = Column(Integer, ForeignKey("users.id"), nullable=False)  # References receiver
+    content = Column(String, nullable=False)  # The actual message content
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())  # Timestamp of when the message was sent
 

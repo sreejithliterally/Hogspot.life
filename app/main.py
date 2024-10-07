@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app import models
 from app.database import engine
-from app.routers import user, userauth,verify_email, hotspot, update_userlocation, swipe,getmatches
+from app.routers import user, userauth,verify_email, hotspot, update_userlocation, swipe,getmatches, chat
 from dotenv import load_dotenv
 
 
@@ -31,6 +31,7 @@ app.include_router(hotspot.router)
 app.include_router(update_userlocation.router)
 app.include_router(swipe.router)
 app.include_router(getmatches.router)
+app.include_router(chat.router)
 
 
 
